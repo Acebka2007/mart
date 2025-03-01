@@ -1,0 +1,26 @@
+# Используем официальный образ Python
+FROM python:3.11
+
+# Устанавливаем зависимости для pytesseract
+RUN apt-get update && apt-get install -y \
+    tesseract-ocr \
+    tesseract-ocr-rus \
+    libtesseract-dev \
+    && apt-get clean
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем все файлы проекта в контейнер
+COPY . /app
+
+# Устанавливаем зависимости
+RUN pip install -r requirements.txt
+
+# Задаем переменные окружения
+ENV TELEGRAM_TOKEN=$TELEGRAM_TOKEN
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+ENV PROVIDER_TOKEN=$PROVIDER_TOKEN
+
+# Запускаем приложение
+CMD ["python", "main.py"]
